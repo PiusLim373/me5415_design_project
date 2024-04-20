@@ -1,0 +1,6 @@
+<launch>
+  <!-- Include ur5_bringup.launch -->
+  <include file="$(find me5415_moveit_config)/launch/moveit_planning_execution.launch"/>
+  <include file="$(find me5415_moveit_config)/launch/moveit_rviz.launch"/>
+
+</launch>

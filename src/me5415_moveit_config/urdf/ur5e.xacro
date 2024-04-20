@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://wiki.ros.org/xacro" name="ur5e_robot">
+  <!--
+    This is a convenience top-level xacro which loads the macro for the UR5e
+    which defines the default values for the various "parameters files"
+    parameters for a UR5e.
+
+    This file is only useful when loading a stand-alone, completely isolated
+    robot with only default values for all parameters such as the kinematics,
+    visual and physical parameters and joint limits.
+
+    This file is not intended to be integrated into a larger scene or other
+    composite xacro.
+
+    Instead, xacro:include 'inc/ur5e_macro.xacro' and override the defaults
+    for the arguments to that macro.
+
+    Refer to 'inc/ur_macro.xacro' for more information.
+  -->
+  <xacro:include filename="$(find ur_description)/urdf/inc/ur5e_macro.xacro"/>
+  <xacro:ur5e_robot prefix="" />
+  <!-- <link name="workspace"/>
+  <link name="table">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://me5415_world/meshes/table.STL" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="table_color">
+        <color rgba="1 1 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://me5415_world/meshes/table.STL" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="ur_stand">
+    <visual>
+      <origin xyz="0 0 0.35" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.25 0.25 0.7"/>
+      </geometry>
+      <material name="blue">
+        <color rgba="1 1 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.35" rpy="0 0 0"/>
+        <geometry>
+          <box size="0.25 0.25 0.7"/>
+        </geometry>
+    </collision>
+  </link>
+  <joint name="workspace_table_joint" type="fixed">
+    <parent link="workspace"/>
+    <child link="table"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint>
+  <joint name="table_ur_stand_joint" type="fixed">
+    <parent link="table"/>
+    <child link="ur_stand"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint>
+  <joint name="ur_stand_baselink_joint" type="fixed">
+    <parent link="ur_stand"/>
+    <child link="base_link"/>
+    <origin xyz="0 0 0.7" rpy="0 0 0"/>
+  </joint> -->
+
+</robot>

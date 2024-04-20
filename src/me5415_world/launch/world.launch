@@ -1,0 +1,4 @@
+<launch>
+  <!-- Include ur5_bringup.launch -->
+  <include file="$(find me5415_world)/launch/ur5e_bringup.launch"/>
+</launch>
