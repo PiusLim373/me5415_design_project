@@ -69,218 +69,56 @@
     <include>
       <uri>model://broccoli</uri>
       <name>broccoli1</name>
-      <pose>0.43 -0.05 0.75 0 0 0</pose> <!-- Adjust pose as needed -->
-    </include>
-    <include>
-      <uri>model://broccoli</uri>
-      <name>broccoli2</name>
-      <pose>0.43 -0.09 0.75 0 0 0</pose> <!-- Adjust pose as needed -->
-    </include>
-    <include>
-      <uri>model://broccoli</uri>
-      <name>broccoli3</name>
-      <pose>0.43 -0.01 0.75 0 0 0</pose> <!-- Adjust pose as needed -->
-    </include>
-    <include>
-      <uri>model://broccoli</uri>
-      <name>broccoli4</name>
-      <pose>0.34 -0.05 0.75 0 0 0</pose> <!-- Adjust pose as needed -->
-    </include>
-    <include>
-      <uri>model://broccoli</uri>
-      <name>broccoli5</name>
-      <pose>0.52 -0.05 0.75 0 0 0</pose> <!-- Adjust pose as needed -->
+      <pose>0.43 0.19 0.76 0 0 0</pose> 
     </include>
 
-    <include>
+    <!-- <include>
       <uri>model://noodles</uri>
       <name>noodles1</name>
-      <pose>0.43 -0.01 0.75 1.5708 0 0</pose> <!-- Adjust pose as needed -->
-    </include>
-    <include>
-      <uri>model://noodles</uri>
-      <name>noodles2</name>
-      <pose>0.37 -0.01 0.75 1.5708 0 0</pose> <!-- Adjust pose as needed -->
-    </include>
-    <include>
-      <uri>model://noodles</uri>
-      <name>noodles3</name>
-      <pose>0.49 -0.01 0.75 1.5708 0 0</pose> <!-- Adjust pose as needed -->
-    </include>
+      <pose>0.43 -0.01 0.75 0 0 0</pose> 
+    </include> -->
 
     <include>
       <uri>model://meatball</uri>
       <name>meatball1</name>
-      <pose>0.34 -0.29 0.76 0 0 0</pose> <!-- Adjust pose as needed -->
+      <pose>0.43 -0.21 0.74 0 0 0</pose> 
     </include>
-    <include>
-      <uri>model://meatball</uri>
-      <name>meatball2</name>
-      <pose>0.25 -0.29 0.76 0 0 0</pose> <!-- Adjust pose as needed -->
-    </include>
-    <include>
-      <uri>model://meatball</uri>
-      <name>meatball3</name>
-      <pose>0.43 -0.29 0.76 0 0 0</pose> <!-- Adjust pose as needed -->
-    </include>
-    <include>
-      <uri>model://meatball</uri>
-      <name>meatball4</name>
-      <pose>0.34 -0.33 0.76 0 0 0</pose> <!-- Adjust pose as needed -->
-    </include>
-    <include>
-      <uri>model://meatball</uri>
-      <name>meatball5</name>
-      <pose>0.34 -0.25 0.76 0 0 0</pose> <!-- Adjust pose as needed -->
-    </include>
-
-
-    <include>
+    <!-- <include>
       <uri>model://egg</uri>
       <name>egg1</name>
-      <pose>0.27 -0.35 0.70 1.5708 0 0</pose> <!-- Adjust pose as needed -->
+      <pose>0.43 -0.41 0.75 0 0 0</pose> 
     </include>
-    <include>
-      <uri>model://egg</uri>
-      <name>egg2</name>
-      <pose>0.27 -0.43 0.70 1.5708 0 0</pose> <!-- Adjust pose as needed -->
-    </include>
-    <include>
-      <uri>model://egg</uri>
-      <name>egg3</name>
-      <pose>0.40 -0.35 0.70 1.5708 0 0</pose> <!-- Adjust pose as needed -->
-    </include>
-    <include>
-      <uri>model://egg</uri>
-      <name>egg4</name>
-      <pose>0.40 -0.43 0.70 1.5708 0 0</pose> <!-- Adjust pose as needed -->
-    </include>
-
-
 
     <include>
       <uri>model://slice</uri>
       <name>slice1</name>
-      <pose>0.70 0.18 0.92 -1.5708 0 0</pose> <!-- Adjust pose as needed -->
-    </include>
-    <include>
-      <uri>model://slice</uri>
-      <name>slice2</name>
-      <pose>0.70 0.23 0.92 -1.5708 0 0</pose> <!-- Adjust pose as needed -->
-    </include>
-    <include>
-      <uri>model://slice</uri>
-      <name>slice3</name>
-      <pose>0.70 0.13 0.92 -1.5708 0 0</pose> <!-- Adjust pose as needed -->
-    </include>
-    <include>
-      <uri>model://slice</uri>
-      <name>slice4</name>
-      <pose>0.61 0.18 0.92 -1.5708 0 0</pose> <!-- Adjust pose as needed -->
-    </include>
-    <include>
-      <uri>model://slice</uri>
-      <name>slice5</name>
-      <pose>0.79 0.18 0.92 -1.5708 0 0</pose> <!-- Adjust pose as needed -->
+      <pose>0.73 0.19 0.91 0 0 0</pose> 
     </include>
 
     <include>
       <uri>model://sausage</uri>
       <name>sausage1</name>
-      <pose>0.67 -0.31 0.92 0 0 0</pose> <!-- Adjust pose as needed -->
+      <pose>0.73 -0.01 0.91 0 0 0</pose> 
     </include>
-    <include>
-      <uri>model://sausage</uri>
-      <name>sausage2</name>
-      <pose>0.67 -0.28 0.92 0 0 0</pose> <!-- Adjust pose as needed -->
-    </include>
-    <include>
-      <uri>model://sausage</uri>
-      <name>sausage3</name>
-      <pose>0.67 -0.34 0.92 0 0 0</pose> <!-- Adjust pose as needed -->
-    </include>
-    <include>
-      <uri>model://sausage</uri>
-      <name>sausage4</name>
-      <pose>0.67 -0.37 0.92 0 0 0</pose> <!-- Adjust pose as needed -->
-    </include>
- 
 
     <include>
       <uri>model://greenbean</uri>
       <name>greenbean1</name>
-      <pose>0.72 -0.54 0.91 0 0 0</pose> <!-- Adjust pose as needed -->
+      <pose>0.73 -0.21 0.91 0 0 0</pose> 
     </include>
-    <include>
-      <uri>model://greenbean</uri>
-      <name>greenbean2</name>
-      <pose>0.72 -0.51 0.91 0 0 0</pose> <!-- Adjust pose as needed -->
-    </include>
-    <include>
-      <uri>model://greenbean</uri>
-      <name>greenbean3</name>
-      <pose>0.72 -0.57 0.91 0 0 0</pose> <!-- Adjust pose as needed -->
-    </include>
-    <include>
-      <uri>model://greenbean</uri>
-      <name>greenbean4</name>
-      <pose>0.64 -0.54 0.91 0 0 0</pose> <!-- Adjust pose as needed -->
-    </include>
-    <include>
-      <uri>model://greenbean</uri>
-      <name>greenbean5</name>
-      <pose>0.64 -0.51 0.91 0 0 0</pose> <!-- Adjust pose as needed -->
-    </include>
-    <include>
-      <uri>model://greenbean</uri>
-      <name>greenbean6</name>
-      <pose>0.64 -0.57 0.91 0 0 0</pose> <!-- Adjust pose as needed -->
-    </include>
-
 
     <include>
       <uri>model://cookie</uri>
       <name>cookie1</name>
-      <pose>0.68 -0.47 0.86 1.22 0 0</pose> <!-- Adjust pose as needed -->
-    </include>
-    <include>
-      <uri>model://cookie</uri>
-      <name>cookie2</name>
-      <pose>0.68 -0.53 0.86 1.22 0 0</pose> <!-- Adjust pose as needed -->
-    </include>
-    <include>
-      <uri>model://cookie</uri>
-      <name>cookie3</name>
-      <pose>0.76 -0.47 0.86 1.22 0 0</pose> <!-- Adjust pose as needed -->
-    </include>
-    <include>
-      <uri>model://cookie</uri>
-      <name>cookie4</name>
-      <pose>0.76 -0.53 0.86 1.22 0 0</pose> <!-- Adjust pose as needed -->
-    </include>
-    <include>
-      <uri>model://cookie</uri>
-      <name>cookie5</name>
-      <pose>0.60 -0.47 0.86 1.22 0 0</pose> <!-- Adjust pose as needed -->
-    </include>
-    <include>
-      <uri>model://cookie</uri>
-      <name>cookie6</name>
-      <pose>0.60 -0.53 0.86 1.22 0 0</pose> <!-- Adjust pose as needed -->
+      <pose>0.73 -0.41 0.91 0 0 0</pose> 
     </include>
 
-
-
-
-
- 
-
-    
     <include>
       <uri>model://juicebottle</uri>
       <name>juicebottle2</name>
-      <pose>0.22 -0.49 0.73 -1.5708 0 0</pose> <!-- Adjust pose as needed -->
-    </include>
+      <pose>0.43 -0.56 0.85 0 0 0</pose> 
+    </include> -->
+
 
 
     
@@ -305,32 +143,6 @@
       <elevation>0</elevation>
       <heading_deg>0</heading_deg>
     </spherical_coordinates>
-    <light name='user_directional_light_0' type='directional'>
-      <pose>-2.3698 3.88461 1 0 -0 0</pose>
-      <diffuse>0.5 0.5 0.5 1</diffuse>
-      <specular>0.1 0.1 0.1 1</specular>
-      <direction>0.1 0.1 -0.9</direction>
-      <attenuation>
-        <range>20</range>
-        <constant>0.5</constant>
-        <linear>0.01</linear>
-        <quadratic>0.001</quadratic>
-      </attenuation>
-      <cast_shadows>1</cast_shadows>
-    </light>
-    <light name='user_directional_light_2' type='directional'>
-      <pose>3.19932 0.027409 1 0 -0 0</pose>
-      <diffuse>0.5 0.5 0.5 1</diffuse>
-      <specular>0.1 0.1 0.1 1</specular>
-      <direction>0.1 0.1 -0.9</direction>
-      <attenuation>
-        <range>20</range>
-        <constant>0.5</constant>
-        <linear>0.01</linear>
-        <quadratic>0.001</quadratic>
-      </attenuation>
-      <cast_shadows>1</cast_shadows>
-    </light>
     <state world_name='default'>
       <sim_time>1055 494000000</sim_time>
       <real_time>1465 125121474</real_time>
@@ -400,12 +212,6 @@
       </model>
       <light name='sun'>
         <pose>0 0 10 0 -0 0</pose>
-      </light>
-      <light name='user_directional_light_0'>
-        <pose>0 0 3 0 -0 0</pose>
-      </light>
-      <light name='user_directional_light_2'>
-        <pose>2 0 1 0 1.57 0</pose>
       </light>
     </state>
     <gui fullscreen='0'>

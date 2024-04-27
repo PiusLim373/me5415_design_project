@@ -95,6 +95,21 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
             Value: true
+          gripper_base:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          left_finger:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          right_finger:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
           shoulder_link:
             Alpha: 1
             Show Axes: false
@@ -210,6 +225,21 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
             Value: true
+          gripper_base:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          left_finger:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
+          right_finger:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
           shoulder_link:
             Alpha: 1
             Show Axes: false
@@ -287,6 +317,12 @@ Visualization Manager:
           Value: false
         forearm_link:
           Value: false
+        gripper_base:
+          Value: false
+        left_finger:
+          Value: false
+        right_finger:
+          Value: false
         shoulder_link:
           Value: false
         soft_gripper:
@@ -330,6 +366,11 @@ Visualization Manager:
                           wrist_3_link:
                             flange:
                               tool0:
+                                gripper_base:
+                                  left_finger:
+                                    {}
+                                  right_finger:
+                                    {}
                                 soft_gripper:
                                   {}
       Update Interval: 0
@@ -350,7 +391,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/XYOrbit
-      Distance: 2.071399688720703
+      Distance: 2.5609474182128906
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -358,17 +399,17 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: 1.2003114223480225
-        Y: 1.7425376176834106
-        Z: -2.938645593530964e-07
+        X: 1.1118779182434082
+        Y: -0.012157797813415527
+        Z: -1.7465526980231516e-07
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.4797969460487366
+      Pitch: 0.10479696840047836
       Target Frame: base_link
-      Yaw: 0.6617618799209595
+      Yaw: 4.60994815826416
     Saved: ~
 Window Geometry:
   Displays:

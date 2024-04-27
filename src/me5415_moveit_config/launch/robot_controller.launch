@@ -1,0 +1,5 @@
+<launch>
+  <node name="robot_controller" pkg="me5415_moveit_config" type="robot_controller.py" output="screen" >
+    <rosparam file="$(find me5415_moveit_config)/config/item_pose.yaml" command="load"/>
+  </node> 
+</launch>

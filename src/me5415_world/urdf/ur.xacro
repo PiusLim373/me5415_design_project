@@ -132,11 +132,160 @@
     <child link="table"/>
     <origin xyz="0 0 0" rpy="0 0 0"/>
   </joint>
+  <link name="gripper_base">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://me5415_world/meshes/gripper_without_finger.STL" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="gripper_without_finger_color">
+        <color rgba="0.5 0.5 0.5 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://me5415_world/meshes/gripper_without_finger.STL" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.5" />
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <inertia ixx="0.03" iyy="0.03" izz="0.03" ixy="0.0" ixz="0.0" iyz="0.0" />
+    </inertial>
+  </link>
+
+  <link name="left_finger">
+    <inertial>
+      <mass value="0.05" />
+      <inertia 
+        ixx="0.005" ixy="0.0" ixz="0.0"
+        iyy="0.005" iyz="0.0" izz="0.005" />
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="package://me5415_world/meshes/left_finger.STL" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://me5415_world/meshes/left_finger.STL" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <link name="right_finger">
+    <inertial>
+      <mass value="0.05" />
+      <inertia 
+        ixx="0.005" ixy="0.0" ixz="0.0"
+        iyy="0.005" iyz="0.0" izz="0.005" />
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="package://me5415_world/meshes/right_finger.STL" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://me5415_world/meshes/right_finger.STL" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="tool0_gripper_base_joint" type="fixed">
+    <parent link="tool0"/>
+    <child link="gripper_base"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint>
+
+  <joint name="left_finger_joint" type="prismatic">
+    <parent link="gripper_base" />
+    <child link="left_finger" />
+    <origin xyz="0 0.007 0.187" rpy="0 0 0" />
+    <axis xyz="0 1 0" />
+    <limit lower="0" upper="0.075" effort="500" velocity="1.0" />
+    <dynamics friction="1" damping="1" />
+  </joint>
+
+  <transmission name="left_finger_joint_tr">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="left_finger_joint">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="left_finger_joint">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <joint name="right_finger_joint" type="prismatic">
+    <parent link="gripper_base" />
+    <child link="right_finger" />
+    <origin xyz="0 -0.007 0.187" rpy="0 0 0" />
+    <axis xyz="0 -1 0" />
+    <limit lower="0" upper="0.075" effort="500" velocity="1.0" />
+    <mimic joint="left_finger_joint" />
+    <dynamics friction="1" damping="1" />
+  </joint>
+
+  <transmission name="right_finger_joint_tr">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="right_finger_joint">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="right_finger_joint">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <!-- ros_control plugin -->
+  <xacro:macro name="mimic_joint_plugin_gazebo" params="parent_joint mimic_joint has_pid:=false multiplier:=1.0 offset:=0 sensitiveness:=0.0 max_effort:=200.0 robot_namespace:=''">
+    <gazebo>
+        <plugin name="${mimic_joint}_mimic_joint_plugin" filename="libroboticsgroup_gazebo_mimic_joint_plugin.so">
+            <joint>${parent_joint}</joint>
+            <mimicJoint>${mimic_joint}</mimicJoint>
+            <xacro:if value="${has_pid}">
+            <hasPID />
+            </xacro:if>
+            <multiplier>${multiplier}</multiplier>
+            <offset>${offset}</offset>
+            <sensitiveness>${sensitiveness}</sensitiveness>
+            <maxEffort>${max_effort}</maxEffort>
+            <xacro:unless value="${robot_namespace == ''}">
+                <robotNamespace>($robot_namespace)</robotNamespace>
+            </xacro:unless>
+        </plugin>
+    </gazebo>
+  </xacro:macro>
+
+  <xacro:mimic_joint_plugin_gazebo parent_joint="left_finger_joint"
+        mimic_joint="right_finger_joint" has_pid="false" multiplier="1.0"
+        max_effort="200.0" />
+
+  <gazebo>
+    <plugin name="gazebo_grasp_fix" filename="libgazebo_grasp_fix.so">
+        <arm>
+            <arm_name>tool0</arm_name>
+            <palm_link>wrist_3_link</palm_link>
+            <gripper_link> left_finger </gripper_link>
+            <gripper_link> right_finger </gripper_link>
+        </arm>
+        <forces_angle_tolerance>100</forces_angle_tolerance>
+        <update_rate>10</update_rate>
+        <grip_count_threshold>3</grip_count_threshold>
+        <max_grip_count>10</max_grip_count>
+        <release_tolerance>0.001</release_tolerance>
+        <disable_collisions_on_attach>false</disable_collisions_on_attach>
+        <contact_topic>__default_topic__</contact_topic>
+    </plugin>
+  </gazebo>
 
   <link name="soft_gripper"/>
   <joint name="soft_gripper_eef" type="fixed">
     <parent link="tool0"/>
     <child link="soft_gripper"/>
-    <origin xyz="0 0 0.1" rpy="0 0 0"/>
+    <origin xyz="0 0 0.3" rpy="0 0 0"/>
   </joint>
 </robot>
