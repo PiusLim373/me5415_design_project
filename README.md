@@ -6,7 +6,13 @@ This repo is the source code to simulate a UR5 with a soft gripper in Gazebo, as
 
     sudo apt install ros-noetic-universal-robots
     sudo apt install ros-noetic-moveit-commander
-### 2. clone and catkin make this package
+### 2. clone this package
+### 3. clone the following packages into the src folder
+    git@github.com:JenniferBuehler/gazebo-pkgs.git
+    git@github.com:JenniferBuehler/general-message-pkgs.git
+    git@github.com:roboticsgroup/roboticsgroup_gazebo_plugins.git
+
+### 4. catkin_make
 
 ## Usage
 ### 1. Launch the Gazebo world
@@ -17,7 +23,7 @@ This repo is the source code to simulate a UR5 with a soft gripper in Gazebo, as
     roslaunch me5415_world moveit.launch
 
 ### 3. Launch the robot controller script
-    rosrun me5415_moveit_config robot_controller.py
+    roslaunch me5415_moveit_config robot_controller.launch
 This is the actual script that controls the robot. There are mainly 4 ways to move the robot:
 | Motion Type                 | Descriptipn                                                                         | Remarks                                      |
 |-----------------------------|-------------------------------------------------------------------------------------|----------------------------------------------|
@@ -30,3 +36,11 @@ This is the main part to add in coordinate to complete the simulation
 
     # to get the current joint angle of the robot
     rostopic echo /eff_joint_traj_controller/state
+
+To open / close the gripper
+    
+    # close
+    rostopic pub /left_finger_joint_position_controller/command std_msgs/Float64 "data: 0.00"
+
+    # open
+    rostopic pub /left_finger_joint_position_controller/command std_msgs/Float64 "data: 0.03"
