@@ -27,6 +27,14 @@
         <joint name="wrist_2_joint" value="-1.582476911590149"/>
         <joint name="wrist_3_joint" value="-0.8699532751422847"/>
     </group_state>
+    <group_state name="source_juice_home" group="manipulator">
+        <joint name="shoulder_pan_joint" value="-2.350423321393486"/>
+        <joint name="shoulder_lift_joint" value="-1.5525910112597572"/>
+        <joint name="elbow_joint" value="2.029588337662343"/>
+        <joint name="wrist_1_joint" value="-0.4584786254397697"/>
+        <joint name="wrist_2_joint" value="-0.7785594551543147"/>
+        <joint name="wrist_3_joint" value="1.5970609010611128"/>
+    </group_state>
     <group_state name="assemble_home" group="manipulator">
         <joint name="elbow_joint" value="1.9136007530844346"/>
         <joint name="shoulder_lift_joint" value="-2.0616541784220095"/>
@@ -34,6 +42,22 @@
         <joint name="wrist_1_joint" value="-1.412123916710537"/>
         <joint name="wrist_2_joint" value="-1.5705635649903282"/>
         <joint name="wrist_3_joint" value="-0.7575102394015225"/>
+    </group_state>
+    <group_state name="assemble_juice_b_home" group="manipulator">
+        <joint name="shoulder_pan_joint" value="-0.018"/>
+        <joint name="shoulder_lift_joint" value="-1.5525910112597572"/>
+        <joint name="elbow_joint" value="2.029588337662343"/>
+        <joint name="wrist_1_joint" value="-0.4584786254397697"/>
+        <joint name="wrist_2_joint" value="-0.7785594551543147"/>
+        <joint name="wrist_3_joint" value="1.5970609010611128"/>
+    </group_state>
+    <group_state name="assemble_juice_a_home" group="manipulator">
+        <joint name="shoulder_pan_joint" value="0.7061162922154942"/>
+        <joint name="shoulder_lift_joint" value="-1.499839065674486"/>
+        <joint name="elbow_joint" value="1.9830920700243233"/>
+        <joint name="wrist_1_joint" value="-0.4586445118387976"/>
+        <joint name="wrist_2_joint" value="-0.8642032194899487"/>
+        <joint name="wrist_3_joint" value="1.599688701248442"/>
     </group_state>
     <group_state name="open" group="gripper">
         <joint name="left_finger_joint" value="0.0653"/>

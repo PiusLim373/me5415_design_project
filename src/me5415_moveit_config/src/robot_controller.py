@@ -4,12 +4,14 @@ import sys
 import moveit_commander
 import moveit_msgs.msg
 import copy
-from geometry_msgs.msg import Pose, Point
+from geometry_msgs.msg import Pose, Point, Quaternion
 from me5415_moveit_config.srv import *
-from std_srvs.srv import SetBool, SetBoolResponse
+from std_srvs.srv import SetBoolResponse
 from std_msgs.msg import Float64
+from gazebo_msgs.srv import SpawnModel, SpawnModelRequest
 import time
 import math
+import os
 
 
 class MoveGroupPythonInteface(object):
@@ -35,6 +37,7 @@ class MoveGroupPythonInteface(object):
         self.planning_frame = planning_frame
         self.eef_link = eef_link
         self.group_names = group_names
+        self.gripper_opening = 0.00
 
         self.gripper_opening_pub = rospy.Publisher(
             "left_finger_joint_position_controller/command", Float64, queue_size=1
@@ -45,7 +48,14 @@ class MoveGroupPythonInteface(object):
         # rospy.Service("move_in_cartesian_direction", MoveInCartesianDirection, self.move_in_cartesian_direction_cb)
         # rospy.Service("get_robot_states", GetRobotStates, self.get_robot_states_cb)
         # rospy.Service("gripper_activation", SetBool, self.gripper_activation_cb)
+        self.spawn_model_service = rospy.ServiceProxy("/gazebo/spawn_sdf_model", SpawnModel)
+        rospy.Timer(rospy.Duration(0.5), self.gripper_opening_cb)
         rospy.loginfo("Initialization Completed!")
+
+    def gripper_opening_cb(self, event):
+        data = Float64()
+        data.data = self.gripper_opening
+        self.gripper_opening_pub.publish(data)
 
     def go_to_saved_joint_cb(self, req):
         res = GoToSavedJointResponse()
@@ -103,16 +113,12 @@ class MoveGroupPythonInteface(object):
         return res
 
     def open_gripper(self, opening=0.03):
-        data = Float64()
-        data.data = opening
-        self.gripper_opening_pub.publish(data)
+        self.gripper_opening = opening
         time.sleep(1)
         return True
 
     def close_gripper(self, opening=0.00):
-        data = Float64()
-        data.data = opening
-        self.gripper_opening_pub.publish(data)
+        self.gripper_opening = opening
         time.sleep(1)
         return True
 
@@ -123,6 +129,13 @@ class MoveGroupPythonInteface(object):
         return result
 
     def move_with_joint(self, joint_goal):
+        result = self.move_group.go(joint_goal, wait=True)
+        self.move_group.stop()
+        return result
+
+    def rotate_specific_joint(self, joint, magnitude):
+        joint_goal = self.move_group.get_current_joint_values()
+        joint_goal[joint] += magnitude
         result = self.move_group.go(joint_goal, wait=True)
         self.move_group.stop()
         return result
@@ -164,6 +177,15 @@ class MoveGroupPythonInteface(object):
             waypoints.append(temp_waypoint)
 
         return waypoints
+
+    def move_with_cartesian_no_iteration(self, pose_goal):
+        self.move_group.clear_pose_targets()
+        print(pose_goal)
+        self.move_group.set_pose_target(pose_goal)
+        result = self.move_group.go(wait=True)
+        self.move_group.stop()
+        self.move_group.clear_pose_targets()
+        return result
 
     def move_with_cartesian(self, pose_goal_list):
         use_curr_quaternion = False
@@ -241,87 +263,171 @@ class MoveGroupPythonInteface(object):
         return temp
 
 
-def transfer_meatball():
-    print("source table homing")
-    if ROBOT.go_to_saved_joint("source_home"):
-        print("moving to meatball tray")
-        if ROBOT.move_with_cartesian(ITEM_POSES['meatball']):
-            print("opening gripper")
-            ROBOT.open_gripper()
-            print("going down")
-            if ROBOT.move_cartesian_direction("z", -0.1):
-                print("closing gripper")
-                ROBOT.close_gripper()
-                print("going up")
-                if ROBOT.move_cartesian_direction("z", 0.1):
-                    print("source table homing")
-                    if ROBOT.go_to_saved_joint("source_home"):
-                        print("assemble table homing")
-                        if ROBOT.go_to_saved_joint("assemble_home"):
-                            print("moving to plate")
-                            if ROBOT.move_with_cartesian(ITEM_POSES['plate']):
-                                print("going down")
-                                if ROBOT.move_cartesian_direction("z", -0.1):
-                                    print("opening gripper")
-                                    ROBOT.open_gripper()
-                                    print("going up")
-                                    if ROBOT.move_cartesian_direction("z", 0.1):
-                                        print("closing gripper")
-                                        ROBOT.close_gripper()
-                                        print("assemble table homing")
-                                        if ROBOT.go_to_saved_joint("assemble_home"):
-                                            print("all done!")
-
-def transfer_brocolli():
-    print("source table homing")
-    if ROBOT.go_to_saved_joint("source_home"):
-        print("moving to brocolli tray")
-        if ROBOT.move_with_cartesian(ITEM_POSES['brocolli']):
-            print("opening gripper")
-            ROBOT.open_gripper()
-            print("going down")
-            if ROBOT.move_cartesian_direction("z", -0.1):
-                print("closing gripper")
-                ROBOT.close_gripper()
-                print("going up")
-                if ROBOT.move_cartesian_direction("z", 0.1):
-                    print("source table homing")
-                    if ROBOT.go_to_saved_joint("source_home"):
-                        print("assemble table homing")
-                        if ROBOT.go_to_saved_joint("assemble_home"):
-                            print("moving to plate")
-                            if ROBOT.move_with_cartesian(ITEM_POSES['plate']):
-                                print("going down")
-                                if ROBOT.move_cartesian_direction("z", -0.1):
-                                    print("opening gripper")
-                                    ROBOT.open_gripper()
-                                    print("going up")
-                                    if ROBOT.move_cartesian_direction("z", 0.1):
-                                        print("closing gripper")
-                                        ROBOT.close_gripper()
-                                        print("assemble table homing")
-                                        if ROBOT.go_to_saved_joint("assemble_home"):
-                                            print("all done!")
-
-def debug():
-    pass
-
 def run_service():
     rospy.init_node("robot_controller")
     robot = MoveGroupPythonInteface()
     rospy.spin()
 
+
+def normal_tray_transfer(food_coor, placing_coor, gripper_opening=0.03):
+    print("source table homing")
+    if ROBOT.go_to_saved_joint("source_home"):
+        print("moving to meatball tray")
+        if ROBOT.move_with_cartesian(food_coor):
+            print("opening gripper")
+            ROBOT.open_gripper(gripper_opening)
+            print("going down")
+            if ROBOT.move_cartesian_direction("z", -0.1):
+                print("closing gripper")
+                ROBOT.close_gripper()
+                print("going up")
+                if ROBOT.move_cartesian_direction("z", 0.1):
+                    print("source table homing")
+                    if ROBOT.go_to_saved_joint("source_home"):
+                        print("assemble table homing")
+                        if ROBOT.go_to_saved_joint("assemble_home"):
+                            print("moving to plate")
+                            if ROBOT.move_with_cartesian(placing_coor):
+                                print("going down")
+                                if ROBOT.move_cartesian_direction("z", -0.1):
+                                    print("opening gripper")
+                                    ROBOT.open_gripper(gripper_opening)
+                                    print("going up")
+                                    if ROBOT.move_cartesian_direction("z", 0.1):
+                                        print("closing gripper")
+                                        ROBOT.close_gripper()
+                                        print("assemble table homing")
+                                        if ROBOT.go_to_saved_joint("assemble_home"):
+                                            print("all done!")
+                                            return True
+    return False
+
+
+def retry_fail_placement(placing_coor, gripper_opening=0.03):
+    if ROBOT.go_to_saved_joint("assemble_home"):
+        print("moving to plate")
+        if ROBOT.move_with_cartesian(placing_coor):
+            print("going down")
+            if ROBOT.move_cartesian_direction("z", -0.1):
+                print("opening gripper")
+                ROBOT.open_gripper(gripper_opening)
+                print("going up")
+                if ROBOT.move_cartesian_direction("z", 0.1):
+                    print("closing gripper")
+                    ROBOT.close_gripper()
+                    print("assemble table homing")
+                    if ROBOT.go_to_saved_joint("assemble_home"):
+                        print("all done!")
+                        return True
+    return False
+
+
+def transfer_juice():
+    if ROBOT.go_to_saved_joint("source_home"):
+        if ROBOT.go_to_saved_joint("source_juice_home"):
+            if ROBOT.move_with_cartesian(ITEM_POSES["juice"]):
+                ROBOT.open_gripper()
+                if ROBOT.move_cartesian_direction("x", 0.1):
+                    ROBOT.close_gripper()
+                    if ROBOT.move_cartesian_direction("z", 0.2):
+                        if ROBOT.go_to_saved_joint("assemble_juice_b_home"):
+                            if ROBOT.move_with_cartesian(ITEM_POSES["cup_B"]):
+                                if ROBOT.rotate_specific_joint(5, 0.785398):
+                                    time.sleep(1)
+                                    if ROBOT.rotate_specific_joint(5, -0.785398):
+                                        if ROBOT.go_to_saved_joint("assemble_juice_a_home"):
+                                            if ROBOT.move_with_cartesian(ITEM_POSES["cup_A"]):
+                                                if ROBOT.rotate_specific_joint(5, 0.785398):
+                                                    time.sleep(1)
+                                                    if ROBOT.rotate_specific_joint(5, -0.785398):
+                                                        if ROBOT.go_to_saved_joint("source_juice_home"):
+                                                            if ROBOT.move_with_cartesian(ITEM_POSES["juice_putback"]):
+                                                                if ROBOT.move_cartesian_direction("x", 0.1):
+                                                                    ROBOT.open_gripper()
+                                                                    if ROBOT.move_cartesian_direction("x", -0.1):
+                                                                        if ROBOT.go_to_saved_joint("source_home"):
+                                                                            return True
+    return False
+
+
+def spawn_model(unique_name, sdf_path, spawn_pose):
+    with open(sdf_path, "r") as sdf_file:
+        sdf_content = sdf_file.read()
+
+    service_data = SpawnModelRequest()
+    service_data.model_name = unique_name
+    service_data.model_xml = sdf_content
+    service_data.robot_namespace = ""
+    service_data.initial_pose = spawn_pose
+    service_data.reference_frame = "world"
+
+    result = ROBOT.spawn_model_service.call(service_data)
+    if result.success:
+        print("successfully spawned model!")
+        return True
+    return False
+
+
+def debug():
+    ROBOT.close_gripper()
+    if ROBOT.go_to_saved_joint("source_juice_home"):
+        if ROBOT.move_with_cartesian(ITEM_POSES["juice_putback"]):
+            if ROBOT.move_cartesian_direction("x", 0.1):
+                ROBOT.open_gripper()
+                if ROBOT.move_cartesian_direction("x", -0.1):
+                    if ROBOT.go_to_saved_joint("source_home"):
+                        pass
+
+
 def transfer_food_flow():
-    transfer_brocolli()
-    transfer_meatball()
+    # broccoli
+    normal_tray_transfer(ITEM_POSES["brocolli"], ITEM_POSES["bowl_A"])
+    normal_tray_transfer(ITEM_POSES["brocolli"], ITEM_POSES["bowl_B"])
+    # noodles (to-do)
+    # meatball
+    normal_tray_transfer(ITEM_POSES["meatball"], ITEM_POSES["container_1A"])
+    normal_tray_transfer(ITEM_POSES["meatball"], ITEM_POSES["container_1B"])
+    # egg
+    normal_tray_transfer(ITEM_POSES["egg"], ITEM_POSES["plate_A"], gripper_opening=0.06)
+    normal_tray_transfer(ITEM_POSES["egg"], ITEM_POSES["plate_B"], gripper_opening=0.06)
+    transfer_juice()
+
+
+def spawn_food():
+    # broccolli
+    spawn_pose = Pose(Point(x=0.43, y=0.19, z=0.76), Quaternion(x=0, y=0, z=0, w=1))
+    spawn_model("broccolli6", "/home/sesto/.gazebo/models/broccoli_simplified/model.sdf", spawn_pose)
+    # meatball
+    spawn_pose = Pose(Point(x=0.43, y=-0.21, z=0.74), Quaternion(x=0, y=0, z=0, w=1))
+    spawn_model("meatball6", "/home/sesto/.gazebo/models/meatball/model.sdf", spawn_pose)
+
+    # egg
+    spawn_pose = Pose(Point(x=0.43, y=-0.41, z=0.75), Quaternion(x=0, y=0, z=0, w=1))
+    spawn_model("egg2", "/home/sesto/.gazebo/models/egg/model.sdf", spawn_pose)
+
 
 if __name__ == "__main__":
     rospy.init_node("robot_controller")
     ITEM_POSES = rospy.get_param("~poses", None)
     print(ITEM_POSES)
     ROBOT = MoveGroupPythonInteface()
-    transfer_food_flow()
 
+    normal_tray_transfer(ITEM_POSES["egg"], ITEM_POSES["plate_A"], gripper_opening=0.06)
+    # retry_fail_placement(ITEM_POSES["plate_B"], gripper_opening=0.06)
 
-# grab juice joint
-# -2.099098391718041, -0.8816061889314906, 1.643638716631668, 5.507127109864094, 5.768607540901943, -1.5504155977946583, 0.00445721352188873, 0.004457190463231838
+    # spawn_pose = Pose(Point(x=0.43, y=-0.41, z=0.75),Quaternion(x=0, y=0, z=0, w=1))
+    # spawn_model("egg0", '/home/sesto/.gazebo/models/egg/model.sdf', spawn_pose)
+
+    """
+        Usage
+        1.  Run the normal_tray_transfer, fill in food, placing coordinate and gripper opening for bigger items, eg: egg
+            Some sample is included in transfer_food_flow()
+        2.  Sometimes the planner will fail if the robot eef is wiggling (idk how to fix this physics yet..), normally will fail at assemble station
+            Solution is to wait abit for the joint to stable down, then run the retry_fail_placement() function
+        3.  If transfer to assemble station A is completed, use the spawn_model function to spawn the model again, since can only pick one at a time
+            The spawn name must be unique, model_xml is the absolute path to the model.sdf in ~/.gazebo/models/xxx/, gripper_opening is same as above
+            The spawn pose is the same as what is defined in the first element of each type in me5415.world
+    
+    
+    
+    """
