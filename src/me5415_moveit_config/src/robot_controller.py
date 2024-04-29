@@ -326,27 +326,22 @@ def transfer_juice():
     if ROBOT.go_to_saved_joint("source_home"):
         if ROBOT.go_to_saved_joint("source_juice_home"):
             if ROBOT.move_with_cartesian(ITEM_POSES["juice"]):
-                ROBOT.open_gripper()
+                ROBOT.open_gripper(opening=0.06)
                 if ROBOT.move_cartesian_direction("x", 0.1):
                     ROBOT.close_gripper()
                     if ROBOT.move_cartesian_direction("z", 0.2):
-                        if ROBOT.go_to_saved_joint("assemble_juice_b_home"):
-                            if ROBOT.move_with_cartesian(ITEM_POSES["cup_B"]):
-                                if ROBOT.rotate_specific_joint(5, 0.785398):
+                        if ROBOT.go_to_saved_joint("assemble_juice_a_home"):
+                            if ROBOT.move_with_cartesian(ITEM_POSES["cup_A"]):
+                                if ROBOT.rotate_specific_joint(5, 1.57):
                                     time.sleep(1)
-                                    if ROBOT.rotate_specific_joint(5, -0.785398):
-                                        if ROBOT.go_to_saved_joint("assemble_juice_a_home"):
-                                            if ROBOT.move_with_cartesian(ITEM_POSES["cup_A"]):
-                                                if ROBOT.rotate_specific_joint(5, 0.785398):
-                                                    time.sleep(1)
-                                                    if ROBOT.rotate_specific_joint(5, -0.785398):
-                                                        if ROBOT.go_to_saved_joint("source_juice_home"):
-                                                            if ROBOT.move_with_cartesian(ITEM_POSES["juice_putback"]):
-                                                                if ROBOT.move_cartesian_direction("x", 0.1):
-                                                                    ROBOT.open_gripper()
-                                                                    if ROBOT.move_cartesian_direction("x", -0.1):
-                                                                        if ROBOT.go_to_saved_joint("source_home"):
-                                                                            return True
+                                    if ROBOT.rotate_specific_joint(5, -1.57):
+                                        if ROBOT.go_to_saved_joint("source_juice_home"):
+                                            if ROBOT.move_with_cartesian(ITEM_POSES["juice_putback"]):
+                                                if ROBOT.move_cartesian_direction("x", 0.15):
+                                                    ROBOT.open_gripper(opening=0.06)
+                                                    if ROBOT.move_cartesian_direction("x", -0.15):
+                                                        if ROBOT.go_to_saved_joint("source_home"):
+                                                            return True
     return False
 
 
@@ -380,30 +375,35 @@ def debug():
 
 
 def transfer_food_flow():
-    # broccoli
-    normal_tray_transfer(ITEM_POSES["brocolli"], ITEM_POSES["bowl_A"])
-    normal_tray_transfer(ITEM_POSES["brocolli"], ITEM_POSES["bowl_B"])
-    # noodles (to-do)
-    # meatball
-    normal_tray_transfer(ITEM_POSES["meatball"], ITEM_POSES["container_1A"])
-    normal_tray_transfer(ITEM_POSES["meatball"], ITEM_POSES["container_1B"])
-    # egg
+    normal_tray_transfer(ITEM_POSES["brocolli"], ITEM_POSES["container_3A"])
+    normal_tray_transfer(ITEM_POSES["spaghetti"], ITEM_POSES["bowl_A"])
+    normal_tray_transfer(ITEM_POSES["meatball"], ITEM_POSES["bowl_A"])
     normal_tray_transfer(ITEM_POSES["egg"], ITEM_POSES["plate_A"], gripper_opening=0.06)
-    normal_tray_transfer(ITEM_POSES["egg"], ITEM_POSES["plate_B"], gripper_opening=0.06)
+    normal_tray_transfer(ITEM_POSES["carrot"], ITEM_POSES["plate_A"])
+    normal_tray_transfer(ITEM_POSES["sausage"], ITEM_POSES["plate_A"])
+    normal_tray_transfer(ITEM_POSES["greenbean"], ITEM_POSES["container_2A"])
+    normal_tray_transfer(ITEM_POSES["cookie"], ITEM_POSES["container_1A"])
     transfer_juice()
 
-
-def spawn_food():
-    # broccolli
-    spawn_pose = Pose(Point(x=0.43, y=0.19, z=0.76), Quaternion(x=0, y=0, z=0, w=1))
-    spawn_model("broccolli6", "/home/sesto/.gazebo/models/broccoli_simplified/model.sdf", spawn_pose)
-    # meatball
-    spawn_pose = Pose(Point(x=0.43, y=-0.21, z=0.74), Quaternion(x=0, y=0, z=0, w=1))
-    spawn_model("meatball6", "/home/sesto/.gazebo/models/meatball/model.sdf", spawn_pose)
-
-    # egg
-    spawn_pose = Pose(Point(x=0.43, y=-0.41, z=0.75), Quaternion(x=0, y=0, z=0, w=1))
-    spawn_model("egg2", "/home/sesto/.gazebo/models/egg/model.sdf", spawn_pose)
+def spawn_all_food_at_assemble():
+    food = ["broccoli", "noodles", "meatball", "egg", "slice", "sausage", "greenbean", "cookie"]
+    position_dict = {
+        "broccoli": ITEM_POSES["container_3A"],
+        "noodles": ITEM_POSES["bowl_A"],
+        "meatball": ITEM_POSES["bowl_A"],
+        "egg": ITEM_POSES["plate_A"],
+        "slice": ITEM_POSES["plate_A"],
+        "sausage": ITEM_POSES["plate_A"],
+        "greenbean": ITEM_POSES["container_2A"],
+        "cookie": ITEM_POSES["container_1A"],
+    }
+    for x in food:
+        spawn_pose = Pose(
+            Point(x=position_dict[x][0], y=position_dict[x][1], z=position_dict[x][2]),
+            Quaternion(x=0, y=0, z=0.707, w=0.707),
+        )
+        spawn_model(f"{x}_cheat", f"/home/sesto/.gazebo/models/{x}/model.sdf", spawn_pose)
+        time.sleep(1)
 
 
 if __name__ == "__main__":
@@ -412,12 +412,49 @@ if __name__ == "__main__":
     print(ITEM_POSES)
     ROBOT = MoveGroupPythonInteface()
 
-    normal_tray_transfer(ITEM_POSES["egg"], ITEM_POSES["plate_A"], gripper_opening=0.06)
-    # retry_fail_placement(ITEM_POSES["plate_B"], gripper_opening=0.06)
+    # normal_tray_transfer(ITEM_POSES["brocolli"], ITEM_POSES["container_3A"])
+    # retry_fail_placement(ITEM_POSES["container_3A"])
 
-    # spawn_pose = Pose(Point(x=0.43, y=-0.41, z=0.75),Quaternion(x=0, y=0, z=0, w=1))
-    # spawn_model("egg0", '/home/sesto/.gazebo/models/egg/model.sdf', spawn_pose)
+    # spawn_pose = Pose(Point(x=0.43, y=-0.01, z=0.76), Quaternion(x=0, y=0, z=0, w=1))
+    # spawn_model("noodles1", "/home/sesto/.gazebo/models/noodles/model.sdf", spawn_pose)
+    # normal_tray_transfer(ITEM_POSES["spaghetti"], ITEM_POSES["bowl_A"], gripper_opening=0.06)
+    # retry_fail_placement(ITEM_POSES["bowl_A"], gripper_opening=0.06)
 
+    # spawn_pose = Pose(Point(x=0.43, y=-0.19, z=0.76), Quaternion(x=0, y=0, z=0, w=1))
+    # spawn_model("meatballx", "/home/sesto/.gazebo/models/meatball/model.sdf", spawn_pose)
+    # normal_tray_transfer(ITEM_POSES["meatball"], ITEM_POSES["bowl_A"])
+    # retry_fail_placement(ITEM_POSES["bowl_A"])
+
+    # spawn_pose = Pose(Point(x=0.43, y=-0.4, z=0.75), Quaternion(x=0, y=0, z=0, w=1))
+    # spawn_model("egg2", "/home/sesto/.gazebo/models/egg/model.sdf", spawn_pose)
+    # normal_tray_transfer(ITEM_POSES["egg"], ITEM_POSES["plate_A"], gripper_opening=0.06)
+    # retry_fail_placement(ITEM_POSES["plate_A"],  gripper_opening=0.06)
+
+    # spawn_pose = Pose(Point(x=0.72, y=0.19, z=0.75), Quaternion(x=0, y=0, z=0, w=1))
+    # spawn_model("carrotx", "/home/sesto/.gazebo/models/slice/model.sdf", spawn_pose)
+    # normal_tray_transfer(ITEM_POSES["carrot"], ITEM_POSES["plate_A"], gripper_opening=0.04)
+    # retry_fail_placement(ITEM_POSES["plate_A"], gripper_opening=0.04)
+
+    # spawn_pose = Pose(Point(x=0.72, y=-0.01, z=0.75), Quaternion(x=0, y=0, z=0, w=1))
+    # spawn_model("sausagex", "/home/sesto/.gazebo/models/sausage/model.sdf", spawn_pose)
+    # normal_tray_transfer(ITEM_POSES["sausage"], ITEM_POSES["plate_A"])
+    # retry_fail_placement(ITEM_POSES["plate_A"])
+
+    # spawn_pose = Pose(Point(x=0.73, y=-0.21, z=0.75), Quaternion(x=0, y=0, z=0, w=1))
+    # spawn_model("greenbeanx", "/home/sesto/.gazebo/models/greenbean/model.sdf", spawn_pose)
+    # normal_tray_transfer(ITEM_POSES["greenbean"], ITEM_POSES["container_2A"])
+    # retry_fail_placement(ITEM_POSES["container_2A"])
+
+    # spawn_pose = Pose(Point(x=0.70, y=-0.39, z=0.75), Quaternion(x=0, y=0, z=0, w=1))
+    # spawn_model("cookiex", "/home/sesto/.gazebo/models/cookie/model.sdf", spawn_pose)
+    # normal_tray_transfer(ITEM_POSES["cookie"], ITEM_POSES["container_1A"], gripper_opening=0.04)
+    # retry_fail_placement(ITEM_POSES["container_1A"], gripper_opening=0.04)
+
+    # spawn_pose = Pose(Point(x=0.39, y=-0.64, z=0.84), Quaternion(x=0, y=0, z=0, w=1))
+    # spawn_model("cookiex", "/home/sesto/.gazebo/models/beer/model.sdf", spawn_pose)
+    # spawn_all_food_at_assemble()
+    transfer_juice()
+    
     """
         Usage
         1.  Run the normal_tray_transfer, fill in food, placing coordinate and gripper opening for bigger items, eg: egg
@@ -428,6 +465,11 @@ if __name__ == "__main__":
             The spawn name must be unique, model_xml is the absolute path to the model.sdf in ~/.gazebo/models/xxx/, gripper_opening is same as above
             The spawn pose is the same as what is defined in the first element of each type in me5415.world
     
+        Smallest container - broccoli 
+        Mid container - green bean 
+        Large container - cookie 
+        Bowl - pasta, meatball
+        Plate - carrot, egg, sausage
     
     
     """
